@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitle">Detail Proyek — Wirranegara</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --font-display: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-body: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --ink:#0f172a;
+    --paper:#ffffff;
+    --blue-tint:#eef4ff;
+    --blue:#2563eb;
+    --blue-dark:#1d4ed8;
+    --blue-light:#93c5fd;
+    --muted:#64748b;
+    --line:#e6ecf5;
+    --radius:24px;
+    --shadow:0 24px 60px rgba(15,23,42,0.10);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--blue-tint);
+    color:var(--ink);
+    font-family:var(--font-body);
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none;}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    padding:14px 26px;border-radius:100px;font-weight:600;font-size:14.5px;
+    cursor:pointer;border:1.5px solid transparent;
+    transition:transform .18s ease, background .18s ease, color .18s ease, box-shadow .18s ease;
+  }
+  .btn:hover{transform:translateY(-2px);}
+  .btn-primary{background:var(--ink);color:#fff;box-shadow:0 8px 20px rgba(15,23,42,0.22);}
+  .btn-primary:hover{background:var(--blue-dark);}
+  .btn-ghost{background:#fff;color:var(--ink);border-color:var(--line);}
+  .btn-ghost:hover{background:var(--ink);color:#fff;border-color:var(--ink);}
+
+  /* ---------- HEADER ---------- */
+  .detail-header{
+    background:rgba(255,255,255,0.7);backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .detail-header .inner{
+    max-width:900px;margin:0 auto;padding:20px 24px;
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .logo{display:flex;align-items:center;}
+  .logo img{height:126px;width:auto;display:block;}
+  .back-link{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:14px;font-weight:600;color:var(--blue);
+  }
+  .back-link:hover{color:var(--blue-dark);}
+
+  /* ---------- MAIN ---------- */
+  .detail-wrap{max-width:820px;margin:0 auto;padding:56px 20px 100px;}
+
+  .detail-card{
+    background:var(--paper);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    border:1px solid var(--line);
+    overflow:hidden;
+  }
+
+  /* image / carousel area — tinggi ngikutin rasio asli foto */
+  .detail-media{
+    position:relative;
+    background:var(--blue-tint);
+    min-height:280px;
+    border-bottom:1px solid var(--line);
+    transition:height .35s ease;
+  }
+  .detail-media .media-error{
+    display:none;
+    position:absolute;inset:0;
+    flex-direction:column;align-items:center;justify-content:center;gap:10px;
+    color:var(--blue);text-align:center;padding:20px;
+  }
+  .detail-media .media-error svg{width:34px;height:34px;opacity:.55;}
+  .detail-media .media-error span{font-size:13px;color:var(--muted);max-width:280px;line-height:1.5;}
+  .detail-media.has-error{height:280px !important;}
+  .detail-media.has-error .media-error{display:flex;}
+  .detail-media.has-error .carousel{display:none;}
+  .detail-media .carousel{position:relative;width:100%;height:100%;overflow:hidden;}
+  .detail-media .carousel-track{display:flex;height:100%;transition:transform .45s cubic-bezier(.4,0,.2,1);}
+  .detail-media .carousel-slide{flex:0 0 100%;height:100%;}
+  .detail-media .carousel-slide img{width:100%;height:100%;object-fit:contain;display:block;}
+  .detail-media .carousel-arrow{
+    position:absolute;top:50%;transform:translateY(-50%);
+    width:38px;height:38px;border-radius:50%;border:none;cursor:pointer;
+    background:rgba(255,255,255,0.92);color:var(--ink);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 6px 16px rgba(15,23,42,0.18);
+    opacity:0;transition:opacity .2s ease;z-index:2;
+  }
+  .detail-media .carousel:hover .carousel-arrow{opacity:1;}
+  .detail-media .carousel-arrow.prev{left:14px;}
+  .detail-media .carousel-arrow.next{right:14px;}
+  .detail-media .carousel-arrow svg{width:16px;height:16px;stroke:var(--ink);}
+  .detail-media .carousel-dots{
+    position:absolute;bottom:14px;left:50%;transform:translateX(-50%);
+    display:flex;gap:6px;z-index:2;
+  }
+  .detail-media .carousel-dot{
+    width:6px;height:6px;border-radius:50%;
+    background:rgba(255,255,255,0.55);border:none;cursor:pointer;padding:0;
+    transition:all .2s ease;
+  }
+  .detail-media .carousel-dot.active{background:#fff;width:20px;border-radius:100px;}
+  .detail-media .media-count{
+    position:absolute;top:14px;right:14px;z-index:2;
+    background:rgba(15,23,42,0.55);color:#fff;
+    font-size:12px;font-weight:600;letter-spacing:.02em;
+    padding:5px 10px;border-radius:100px;
+  }
+
+  /* ---------- BODY (Headline / Subheadline / Deskripsi / Tombol) ---------- */
+  .detail-body{padding:40px 40px 44px;}
+  .detail-tag{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:12.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--blue);margin-bottom:14px;
+  }
+  .detail-tag::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--blue);display:inline-block;}
+  .detail-headline{
+    font-family:var(--font-display);font-weight:700;
+    font-size:clamp(24px,3.4vw,32px);letter-spacing:-0.02em;line-height:1.15;
+    margin:0 0 10px;
+  }
+  .detail-subheadline{
+    font-size:15.5px;font-weight:500;color:var(--muted);
+    margin:0 0 24px;
+  }
+  .detail-caption{
+    font-size:13.5px;font-style:italic;color:var(--muted);
+    margin:-16px 0 24px;
+  }
+  .detail-caption .mention-link{
+    color:var(--blue);font-weight:600;font-style:normal;
+    text-decoration:none;
+  }
+  .detail-caption .mention-link:hover{text-decoration:underline;}
+  .detail-desc{
+    font-size:15px;line-height:1.75;color:var(--muted);
+    margin:0 0 36px;
+    padding-top:20px;border-top:1px solid var(--line);
+  }
+  .detail-actions{display:flex;gap:14px;flex-wrap:wrap;}
+
+  .not-found{
+    text-align:center;padding:120px 20px;color:var(--muted);
+  }
+  .not-found h2{font-family:var(--font-display);color:var(--ink);margin-bottom:12px;}
+
+  @media (max-width:640px){
+    .detail-body{padding:28px 22px 32px;}
+    .detail-actions{flex-direction:column;}
+    .detail-actions .btn{width:100%;}
+  }
+</style>
+</head>
+<body>
+
+<header class="detail-header">
+  <div class="inner">
+    <a href="index.html" class="logo"><img src="logowirranegara.png" alt="Wirranegara"></a>
+    <a href="index.html#karya" class="back-link" id="headerBackLink">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      <span id="headerBackLabel">Kembali ke Portofolio</span>
+    </a>
+  </div>
+</header>
+
+<main class="detail-wrap" id="detailWrap">
+  <!-- konten diisi otomatis lewat JS berdasarkan ?id= di URL -->
+</main>
+
+<script>
+  // ---------- DATA PROYEK ----------
+  // Tinggal edit "title", "subheadline", dan "desc" di bawah sesuai cerita asli tiap proyek.
+  const PROJECTS = {
+    "uiux-design": {
+      title: "UI/UX Design",
+      subheadline: "UI/UX Design — Mockup Aplikasi Smart Home",
+      desc: "Desain UI/UX aplikasi smart home untuk mengontrol perangkat ISP langsung dari HP. Fokus utamanya di penyederhanaan alur onboarding user baru dan visualisasi status perangkat secara real-time. Dikerjakan penuh di Figma, dari wireframe sampai high-fidelity mockup.",
+      images: ["images/foto1.png","images/foto2.png","images/foto3.png","images/foto4.png","images/foto5.png","images/foto6.png"],
+      backTo: "layanan"
+    },
+    "brand-identity": {
+      title: "Brand Identity",
+      subheadline: "Brand Identity — Brand Clothing Lokal",
+       caption: "@warmgripcatalog",
+      desc: "Identitas visual untuk brand clothing lokal, mulai dari eksplorasi logo, pemilihan palet warna, tipografi, sampai brand guideline yang siap dipakai untuk kebutuhan produksi merchandise.",
+      images: ["images/WG1.png","images/WG2.png","images/WG3.jpg","images/WG4.jpg","images/WG5.jpg"],
+      backTo: "layanan"
+    },
+    "artwork-ilustrasi": {
+      title: "Artwork & Ilustrasi",
+      subheadline: "Artwork & Ilustrasi — Konten Visual",
+       caption: "Band @Odyssey_ina",
+      desc: "Artwork & ilustrasi untuk kebutuhan konten visual, dikerjakan di Adobe Illustrator & Photoshop dengan gaya yang disesuaikan sama karakter masing-masing klien.",
+      images: ["images/POST FEED2.jpg","images/SLIDE 1 (FEED2).jpg","images/SLIDE 2 (FEED2).jpg","images/SLIDE 3 (FEED2).jpg","images/SLIDE 4 (FEED2).jpg","images/SLIDE 5 (FEED2).jpg"],
+      backTo: "layanan"
+    },
+    "graphic-design": {
+      title: "Graphic Design",
+      subheadline: "Graphic Design — Materi Cetak & Merchandise",
+       caption: "Brand Lokal @warmgripcatalog",
+      desc: "Materi grafis untuk kebutuhan cetak dan merchandise brand clothing, termasuk desain katalog produk dan template promosi.",
+      images: ["images/WG6.jpg","images/WG7.jpg","images/WG8.jpg","images/WG9.jpeg","images/WG10.jpeg","images/MTR2.jpg","images/MTR1.jpg"],
+      backTo: "layanan"
+    },
+    "website-skripsi": {
+      title: "Website — Proyek Skripsi",
+      subheadline: "UI/UX Design — Studi Kasus Skripsi",
+      desc: "Studi kasus skripsi: riset UX, wireframe, sampai UI final untuk website layanan ISP (Internet Service Provider). Meliputi alur pembelian paket, monitoring penggunaan, dan customer support dalam satu platform.",
+      images: ["images/ISP1.png","images/ISP2.png","images/ISP3.png","images/ISP4.png","images/ISP5.png","images/ISP6.png","images/ISP7.png","images/ISP8.png","images/ISP9.png","images/ISP10.png","images/ISP11.png"]
+    },
+    "identitas-visual-clothing": {
+      title: "Identitas Visual Brand Clothing",
+      subheadline: "Brand Identity — Full Branding Project",
+       caption: "Brand Lokal @warmgripcatalog",
+      desc: "Full branding project untuk brand clothing streetwear — logo utama & variasinya, color palette, tipografi, sampai penerapannya di kemasan dan tag produk.",
+      images: ["images/Group123204.png","images/WG1.png","images/WG2.png","images/WG3.jpg","images/WG4.jpg","images/WG5.jpg"]
+    },
+    "artwork-cover-single-tshirt": {
+      title: "Artwork Cover Single Band & Artwork T-Shirt",
+      subheadline: "Artwork & Ilustrasi",
+      caption: "Band @Odyssey_ina & Brand Lokal @warmgripcatalog",
+      desc: "Kolaborasi dengan band lokal untuk artwork cover single dan desain grafis t-shirt merchandise band, dari sketsa konsep sampai final artwork siap cetak.",
+      images: ["images/ARTODY.jpg","images/WGART1.png","images/WGART2.png","images/WGART3.png","images/WGART4.png","images/WGART5.png","images/WGART6.png","images/WGART7.png","images/WGART8.png","images/WGART9.png","images/WGART10.png","images/WGART11.png","images/WGART12.png"]
+    },
+    "merchandise-katalog": {
+      title: "Merchandise & Katalog Brand Clothing",
+      subheadline: "Brand Lokal warmgripcatalog",
+       caption: "@warmgripcatalog",
+      desc: "Desain katalog produk & materi merchandise untuk brand clothing, termasuk lookbook dan tampilan produk untuk kebutuhan promosi online.",
+      images: ["images/WG6.jpg","images/WG7.jpg","images/WG8.jpg","images/WG9.jpeg","images/WG10.jpeg"]
+    },
+    "konten-sosmed-poster": {
+      title: "Konten Sosial Media & Poster",
+      subheadline: "Graphic Design — Konten Kampanye",
+      caption: "@wirranegara",
+      desc: "Desain konten sosial media dan poster promosi, dibuat konsisten dengan identitas brand untuk kebutuhan campaign Instagram.",
+      images: ["images/MD1.jpg","images/MD2.jpg","images/MD3.jpg","images/MD4.jpg","images/MD5.jpg","images/MD6.jpg","images/MD7.jpg","images/MD8.jpg","images/MD9.jpg"]
+    },
+    "wireframe-prototype-figma": {
+      title: "Wireframe & Prototype Figma",
+      subheadline: "UI/UX Design — Proses Wireframing",
+      desc: "Proses wireframing sampai prototype interaktif di Figma untuk kebutuhan riset skripsi, termasuk alur user testing dan iterasi desain berdasarkan feedback.",
+      images: ["images/01.png","images/02.png","images/03.png","images/04.png","images/05.png","images/06.png","images/07.png","images/08.png","images/09.png","images/10.png","images/11.png"]
+    },
+    "proses-desain-uiux-skripsi": {
+      title: "Proses Desain UI/UX untuk Skripsi",
+      subheadline: "Studi Kasus — Riset sampai UI Final",
+      desc: "Studi kasus lengkap: riset awal, competitive analysis, wireframe, user testing, sampai UI final. Total proses berlangsung sekitar 3 bulan sebagai bagian dari riset skripsi.",
+      images: ["images/01.png","images/02.png","images/03.png","images/04.png","images/05.png","images/06.png","images/07.png","images/08.png","images/09.png","images/10.png","images/11.png","images/ISP1.png","images/ISP2.png","images/ISP3.png","images/ISP4.png","images/ISP5.png","images/ISP6.png","images/ISP7.png","images/ISP8.png","images/ISP9.png","images/ISP10.png","images/ISP11.png"],
+      backTo: "blog"
+    },
+    "bikin-artwork-cover-single": {
+      title: "Bikin Artwork Cover Single dari Nol",
+      subheadline: "Studi Kasus — Kolaborasi Bareng Band",
+       caption: "Band @Odyssey_ina",
+      desc: "Cerita proses kolaborasi bareng band dari brief awal, moodboard, sketsa, sampai artwork final cover single siap rilis di platform musik digital.",
+      images: ["images/POST FEED2.jpg","images/SLIDE 1 (FEED2).jpg","images/SLIDE 2 (FEED2).jpg","images/SLIDE 3 (FEED2).jpg","images/SLIDE 4 (FEED2).jpg","images/SLIDE 5 (FEED2).jpg","images/SLIDE 6 (FEED2).jpg","images/SLIDE 7 (FEED2).jpg","images/SLIDE 8 (FEED2).jpg","images/SLIDE 9 (FEED2).jpg","images/SLIDE 10 (FEED2).jpg"],
+      backTo: "blog"
+    }
+  };
+
+  function getSlugFromUrl(){
+    return new URLSearchParams(window.location.search).get('id');
+  }
+
+  function escapeHtml(str){
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  // Ubah "@username" di dalam teks jadi link ke profil Instagram.
+  // Teks di-escape dulu (aman dari HTML-injection), baru pola @username diganti jadi <a>.
+  function linkifyMentions(str){
+    const safe = escapeHtml(str);
+    return safe.replace(/@([A-Za-z0-9._]+)/g, (match, handle) => {
+      return `<a href="https://instagram.com/${handle}" target="_blank" rel="noopener noreferrer" class="mention-link">@${handle}</a>`;
+    });
+  }
+
+  function renderNotFound(){
+    document.getElementById('detailWrap').innerHTML = `
+      <div class="not-found">
+        <h2>Proyek tidak ditemukan</h2>
+        <p>Sepertinya link yang kamu buka salah atau proyeknya sudah dipindah.</p>
+        <br>
+        <a href="index.html#karya" class="btn btn-primary">Kembali ke Portofolio</a>
+      </div>`;
+  }
+
+  function renderProject(slug){
+    const data = PROJECTS[slug];
+    if(!data){ renderNotFound(); return; }
+
+    document.title = data.title + ' — Wirranegara';
+    document.getElementById('pageTitle').textContent = data.title + ' — Wirranegara';
+
+    // Tombol/link "Kembali" ngarah ke seksi asalnya:
+    // - Layanan buat 4 kategori jasa
+    // - Tulisan buat proyek yang asalnya dari section blog
+    // - Portofolio (Karya) buat proyek studi kasus lainnya
+    const BACK_TARGETS = {
+      layanan: { anchor: 'layanan', label: 'Kembali ke Layanan' },
+      blog:    { anchor: 'blog',    label: 'Kembali ke Tulisan' },
+      karya:   { anchor: 'karya',   label: 'Kembali ke Portofolio' }
+    };
+    const backInfo = BACK_TARGETS[data.backTo] || BACK_TARGETS.karya;
+    const backLabel = backInfo.label;
+    const backHref = `index.html#${backInfo.anchor}`;
+
+    const headerBackLink = document.getElementById('headerBackLink');
+    if(headerBackLink) headerBackLink.setAttribute('href', backHref);
+    const headerBackLabel = document.getElementById('headerBackLabel');
+    if(headerBackLabel) headerBackLabel.textContent = backLabel;
+
+    const imagesJson = escapeHtml(JSON.stringify(data.images));
+    document.getElementById('detailWrap').innerHTML = `
+      <div class="detail-card">
+        <div class="detail-media" id="detailMedia">
+          <div class="carousel" data-images="${imagesJson}" data-alt="${escapeHtml(data.title)}"></div>
+          <div class="media-error">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+            <span>Gambar tidak bisa dimuat. Pastikan folder <b>images/</b> ada di lokasi yang sama dengan file ini.</span>
+          </div>
+        </div>
+        <div class="detail-body">
+          <div class="detail-tag">Studi Kasus Proyek</div>
+          <h1 class="detail-headline">${escapeHtml(data.title)}</h1>
+          <p class="detail-subheadline">${escapeHtml(data.subheadline)}</p>
+          ${data.caption ? `<p class="detail-caption">${linkifyMentions(data.caption)}</p>` : ''}
+          <p class="detail-desc">${escapeHtml(data.desc)}</p>
+          <div class="detail-actions">
+            <a href="${backHref}" class="btn btn-ghost">${backLabel}</a>
+            <a href="mailto:halo@namakamu.com" class="btn btn-primary">Hubungi Saya</a>
+          </div>
+        </div>
+      </div>`;
+
+    initCarousel(document.querySelector('#detailMedia .carousel'));
+  }
+
+  // Carousel sederhana khusus halaman detail — tinggi frame ngikutin rasio asli gambar
+  function initCarousel(root){
+    if(!root) return;
+    let images;
+    try{ images = JSON.parse(root.dataset.images); }catch(e){ return; }
+    const alt = root.dataset.alt || '';
+    const frame = root.closest('.detail-media');
+    let index = 0;
+
+    const track = document.createElement('div');
+    track.className = 'carousel-track';
+    images.forEach((src, i)=>{
+      const slide = document.createElement('div');
+      slide.className = 'carousel-slide';
+      const img = document.createElement('img');
+      img.src = src;
+      img.alt = alt ? `${alt} ${i+1}` : `Slide ${i+1}`;
+      img.loading = 'lazy';
+      slide.appendChild(img);
+      track.appendChild(slide);
+    });
+    root.appendChild(track);
+
+    function fitFrame(i){
+      const imgEl = track.children[i] && track.children[i].querySelector('img');
+      if(!imgEl) return;
+      const applyHeight = ()=>{
+        frame.classList.remove('has-error');
+        if(!imgEl.naturalWidth || !imgEl.naturalHeight) return;
+        const w = frame.offsetWidth || root.offsetWidth;
+        const ratio = imgEl.naturalHeight / imgEl.naturalWidth;
+        const h = w * ratio;
+        // batasi tinggi maksimal biar nggak kepanjangan di layar besar
+        frame.style.height = Math.min(h, window.innerHeight * 0.62) + 'px';
+      };
+      const showError = ()=>{ frame.classList.add('has-error'); };
+      if(imgEl.complete && imgEl.naturalWidth){ applyHeight(); }
+      else if(imgEl.complete && !imgEl.naturalWidth){ showError(); }
+      else {
+        imgEl.addEventListener('load', applyHeight, {once:true});
+        imgEl.addEventListener('error', showError, {once:true});
+      }
+    }
+    fitFrame(0);
+    let resizeTimer;
+    window.addEventListener('resize', ()=>{
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(()=>fitFrame(index), 120);
+    });
+
+    if(images.length > 1){
+      const prevBtn = document.createElement('button');
+      prevBtn.className = 'carousel-arrow prev';
+      prevBtn.setAttribute('aria-label','Sebelumnya');
+      prevBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>';
+
+      const nextBtn = document.createElement('button');
+      nextBtn.className = 'carousel-arrow next';
+      nextBtn.setAttribute('aria-label','Berikutnya');
+      nextBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>';
+
+      const dotsWrap = document.createElement('div');
+      dotsWrap.className = 'carousel-dots';
+      const dots = images.map((_, i)=>{
+        const dot = document.createElement('button');
+        dot.className = 'carousel-dot' + (i===0 ? ' active' : '');
+        dot.setAttribute('aria-label', `Ke slide ${i+1}`);
+        dot.addEventListener('click', ()=>goTo(i));
+        dotsWrap.appendChild(dot);
+        return dot;
+      });
+
+      const countBadge = document.createElement('div');
+      countBadge.className = 'media-count';
+      countBadge.textContent = `1 / ${images.length}`;
+
+      root.appendChild(prevBtn);
+      root.appendChild(nextBtn);
+      root.appendChild(dotsWrap);
+      frame.appendChild(countBadge);
+
+      function goTo(i){
+        index = (i + images.length) % images.length;
+        track.style.transform = `translateX(-${index * 100}%)`;
+        dots.forEach((d, di)=>d.classList.toggle('active', di===index));
+        countBadge.textContent = `${index+1} / ${images.length}`;
+        fitFrame(index);
+      }
+      nextBtn.addEventListener('click', ()=>goTo(index+1));
+      prevBtn.addEventListener('click', ()=>goTo(index-1));
+
+      let startX = 0;
+      root.addEventListener('touchstart', e=>{ startX = e.touches[0].clientX; }, {passive:true});
+      root.addEventListener('touchend', e=>{
+        const diff = e.changedTouches[0].clientX - startX;
+        if(diff > 40) goTo(index-1);
+        else if(diff < -40) goTo(index+1);
+      }, {passive:true});
+
+      document.addEventListener('keydown', e=>{
+        if(e.key === 'ArrowRight') goTo(index+1);
+        else if(e.key === 'ArrowLeft') goTo(index-1);
+      });
+    }
+  }
+
+  renderProject(getSlugFromUrl());
+</script>
+
+</body>
+</html>
